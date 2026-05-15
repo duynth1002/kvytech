@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  role      Role     @default(SELLER)
+  name      String?
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  documents            Document[]
+  reviewedVerifications VerificationAttempt[] @relation("AdminReviewer")
+}
+
+enum Role {
+  SELLER
+  ADMIN
+}
+
+model Document {
+  id           String   @id @default(uuid())
+  sellerId     String
+  seller       User     @relation(fields: [sellerId], references: [id])
+  s3Key        String
+  originalName String
+  mimeType     String
+  size         Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  verificationAttempts VerificationAttempt[]
+}
+
+model VerificationAttempt {
+  id                  String             @id @default(uuid())
+  documentId          String
+  document            Document           @relation(fields: [documentId], references: [id])
+  status              VerificationStatus @default(PENDING)
+  externalReferenceId String?
+  resultReason        String?
+  adminId             String?
+  admin               User?              @relation("AdminReviewer", fields: [adminId], references: [id])
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  auditLogs AuditLog[]
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  INCONCLUSIVE
+  MANUAL_APPROVED
+  MANUAL_REJECTED
+}
+
+model AuditLog {
+  id                    String              @id @default(uuid())
+  verificationAttemptId String
+  verificationAttempt   VerificationAttempt @relation(fields: [verificationAttemptId], references: [id])
+  actor                 String // e.g., "SYSTEM", "ADMIN_ID", "SELLER_ID"
+  action                String
+  previousStatus        VerificationStatus?
+  newStatus             VerificationStatus?
+  timestamp             DateTime            @default(now())
+}
