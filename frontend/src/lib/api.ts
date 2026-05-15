@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = 'https://kvytech.onrender.com/api';
 
 export const apiFetch = async (endpoint: string, options: RequestInit = {}, role: 'SELLER' | 'ADMIN', userId: string) => {
   const headers = new Headers(options.headers || {});
