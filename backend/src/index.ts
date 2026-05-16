@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import sellerRoutes from './routes/seller';
 import adminRoutes from './routes/admin';
+import './worker'; // Start the background verification worker process
 
 const app = express();
 
