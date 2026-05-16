@@ -74,4 +74,3 @@ This is a full-stack monorepo containing a complete, working prototype of the Do
 2. Watch the terminal running `npm run worker`. You'll see it pick up the document and process it.
 3. If it marks it as `VERIFIED` or `REJECTED`, the Seller portal will automatically update.
 4. If it marks it as `INCONCLUSIVE`, go to the Admin Portal. You will see it in the queue and can manually Approve or Reject it. The Seller portal will update with your manual decision.
-# kvytech
