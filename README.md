@@ -101,3 +101,6 @@ This is **not** a replacement for production auth (OAuth2, password hashing, ref
 - Set **`AUTH_SECRET`** to a long random value (minimum 16 characters). The server will refuse to mint tokens without it when `NODE_ENV=production`.
 - Keep **`DEMO_AUTH_PASSWORD`** private; it is one shared password for all demo users.
 - Configure CORS appropriately if the frontend and API are on different origins (narrow `origin` instead of open `*` if you add credentials later).
+
+## Demo URL
+https://my-frontend-p9x3.onrender.com/
