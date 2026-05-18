@@ -4,7 +4,7 @@
 This is a full-stack monorepo containing a complete, working prototype of the Document Verification Workflow. It includes:
 - **Express + Prisma Backend:** Handles secure file uploads via Multer, stores document metadata, and exposes REST APIs for Sellers and Admins.
 - **React + Vite Frontend:** A premium UI built with Tailwind CSS v4, featuring a Seller Dashboard (for uploading and polling status) and an Admin Dashboard (for reviewing inconclusive documents).
-- **Simulated Async Verification Worker:** A standalone Node.js background process (`backend/src/worker.ts`) that polls the database for `PENDING` verifications and randomly assigns them `VERIFIED`, `REJECTED`, or `INCONCLUSIVE` statuses after a realistic delay (2-5 seconds).
+- **Simulated Async Verification Worker:** Logic in `backend/src/worker.ts` polls the database for `PENDING` verifications and randomly assigns `VERIFIED`, `REJECTED`, or `INCONCLUSIVE` after a short delay. It **starts automatically** when you run the API (`npm run dev` / `npm start`). You can still run **`npm run worker`** in a separate terminal if you want a dedicated worker process (e.g. for scaling); do not run both against the same DB unless you add proper job locking.
 - **PostgreSQL Database Integration:** Connected via Prisma ORM for robust state management.
 - **S3 Upload Service:** The backend is configured to push uploaded documents securely to an AWS S3 bucket using the AWS SDK v3.
 
@@ -58,11 +58,11 @@ This is **not** a replacement for production auth (OAuth2, password hashing, ref
    npx prisma db push
    npm run seed
    ```
-4. Start the Express API server:
+4. Start the Express API server (this also starts the verification worker in the same process):
    ```bash
    npm run dev
    ```
-5. **In a separate terminal**, start the mock background worker:
+5. **Optional:** Run the worker as a **separate** process (same codebase; only needed if you split worker and API, e.g. multiple API instances and one worker). Skip this if you only use step 4.
    ```bash
    cd backend
    npm run worker

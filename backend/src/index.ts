@@ -5,6 +5,7 @@ import sellerRoutes from './routes/seller';
 import adminRoutes from './routes/admin';
 import authRoutes from './routes/auth';
 import { attachDemoAuth } from './middleware/auth';
+import { startVerificationWorker } from './worker';
 
 const app = express();
 
@@ -20,4 +21,5 @@ const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`Backend server running on port ${PORT}`);
+  startVerificationWorker();
 });

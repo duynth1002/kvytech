@@ -17,9 +17,9 @@ const mockVerificationService = async (documentId: string): Promise<{ status: Ve
   }
 };
 
-const processPendingVerifications = async () => {
+async function processPendingVerifications() {
   console.log('Worker started, looking for PENDING verifications...');
-  
+
   while (true) {
     try {
       // Find one pending verification (using a simple findFirst, in production use findMany with FOR UPDATE SKIP LOCKED)
@@ -66,6 +66,13 @@ const processPendingVerifications = async () => {
       await sleep(5000); // Wait on error to avoid tight spin
     }
   }
-};
+}
 
-processPendingVerifications();
+/** Starts the mock verification loop without blocking the caller. Safe to call from the API process. */
+export function startVerificationWorker(): void {
+  void processPendingVerifications();
+}
+
+if (require.main === module) {
+  startVerificationWorker();
+}
