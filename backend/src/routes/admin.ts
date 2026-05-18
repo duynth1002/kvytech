@@ -1,16 +1,9 @@
 import { Router } from 'express';
 import { Prisma, VerificationStatus } from '@prisma/client';
 import { prisma } from '../lib/prisma';
+import { requireAdmin } from '../middleware/auth';
 
 const router = Router();
-
-// Middleware to ensure user is admin
-const requireAdmin = (req: any, res: any, next: any) => {
-  if (!req.user || req.user.role !== 'ADMIN') {
-    return res.status(403).json({ error: 'Forbidden. Only admins can access this.' });
-  }
-  next();
-};
 
 // Get all pending and inconclusive verifications
 router.get('/verifications', requireAdmin, async (req: any, res: any) => {

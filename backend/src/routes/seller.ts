@@ -2,6 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma';
+import { requireSeller } from '../middleware/auth';
 import { uploadFileToS3 } from '../services/s3';
 
 const router = Router();
@@ -11,14 +12,6 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
 });
-
-// Middleware to ensure user is seller
-const requireSeller = (req: any, res: any, next: any) => {
-  if (!req.user || req.user.role !== 'SELLER') {
-    return res.status(403).json({ error: 'Forbidden. Only sellers can access this.' });
-  }
-  next();
-};
 
 // Upload document
 router.post('/documents', requireSeller, upload.single('document'), async (req: any, res: any) => {

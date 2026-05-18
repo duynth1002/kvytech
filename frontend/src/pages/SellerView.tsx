@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { apiFetch } from '../lib/api';
 import { Upload, FileText, CheckCircle, XCircle, Clock, AlertTriangle } from 'lucide-react';
 
-const SELLER_ID = 'seller-123'; // Mock user ID, in a real app this comes from auth context
-
 export default function SellerView() {
   const [documents, setDocuments] = useState<any[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -12,7 +10,7 @@ export default function SellerView() {
 
   const fetchDocuments = async () => {
     try {
-      const data = await apiFetch('/seller/documents', {}, 'SELLER', SELLER_ID);
+      const data = await apiFetch('/seller/documents');
       setDocuments(data);
     } catch (err: any) {
       console.error(err);
@@ -45,7 +43,7 @@ export default function SellerView() {
       await apiFetch('/seller/documents', {
         method: 'POST',
         body: formData,
-      }, 'SELLER', SELLER_ID);
+      });
       
       await fetchDocuments();
       if (fileInputRef.current) fileInputRef.current.value = '';

@@ -2,15 +2,13 @@ import { useState, useEffect } from 'react';
 import { apiFetch } from '../lib/api';
 import { ShieldCheck, Check, X, AlertTriangle, FileText, Clock } from 'lucide-react';
 
-const ADMIN_ID = 'admin-123';
-
 export default function AdminView() {
   const [verifications, setVerifications] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<string | null>(null);
 
   const fetchVerifications = async () => {
     try {
-      const data = await apiFetch('/admin/verifications', {}, 'ADMIN', ADMIN_ID);
+      const data = await apiFetch('/admin/verifications');
       setVerifications(data);
     } catch (err) {
       console.error(err);
@@ -39,7 +37,7 @@ export default function AdminView() {
       await apiFetch(`/admin/verifications/${id}/review`, {
         method: 'POST',
         body: JSON.stringify({ decision, reason }),
-      }, 'ADMIN', ADMIN_ID);
+      });
       await fetchVerifications();
     } catch (err) {
       alert('Failed to submit review');
